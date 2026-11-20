@@ -1,0 +1,22 @@
+runs/
+data/*.jsonl
+figs/*.png
+__pycache__/
+*.pyc
+.DS_Store
+
+# never publish run outputs or model weights
+runs*/
+*.safetensors
+*.pt
+*.bin
+*.ckpt
+.env*
+
+# local tooling + private/third-party material
+.impeccable/
+**/.impeccable/
+*.log
+**/.*.log
+MAPPO_Sec_Capstone_Final_Report_formatted.docx
+Evaluator_QA_Prep.pdf

@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""Builds the 5-minute and 10-minute MAPPO speaker scripts as minimal HTML."""
+import re, pathlib
+
+OUT = pathlib.Path(__file__).parent
+WPM = 130
+
+CSS = """
+@font-face{font-family:"SatoshiX";font-weight:300;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Light.otf")}
+@font-face{font-family:"SatoshiX";font-weight:400;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Regular.otf")}
+@font-face{font-family:"SatoshiX";font-weight:500;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Medium.otf")}
+@font-face{font-family:"SatoshiX";font-weight:700;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Bold.otf")}
+@font-face{font-family:"SatoshiX";font-weight:900;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Black.otf")}
+:root{--ink:#14161F;--body:#4A5062;--mute:#8A90A2;--line:#E5E3DC;--paper:#FAF9F6;--acc:#2D50E6;--acc-soft:#E9EDFD;--warn:#D9502B;--gold:#F6F0DC}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"SatoshiX","Satoshi",sans-serif;color:var(--body);font-size:10.6pt;line-height:1.62;background:#fff}
+.page{width:210mm;height:297mm;background:var(--paper);position:relative;overflow:hidden;page-break-after:always;padding:16mm 20mm 14mm}
+.page:last-child{page-break-after:auto}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:"SatoshiX","Satoshi",sans-serif}
+b{color:var(--ink);font-weight:700}
+.eyebrow{font-size:7.8pt;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--mute)}
+h1{font-size:34pt;line-height:1;font-weight:900;letter-spacing:-.035em;color:var(--ink);margin:9px 0 10px}
+h1 i{font-style:normal;color:var(--acc)}
+.lede{font-size:12pt;line-height:1.45;max-width:140mm}
+.meta{display:flex;gap:9mm;margin:12px 0 4px}
+.meta div{font-size:8pt;color:var(--mute);letter-spacing:.04em}
+.meta b{display:block;font-size:15pt;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.tl{margin:10px 0 2px}
+.seg{display:grid;grid-template-columns:19mm 1fr;column-gap:5mm;padding:12px 0 4px;border-top:1px solid var(--line)}
+.seg .t{padding-top:2px}
+.seg .t b{display:block;font-size:12.5pt;font-weight:900;letter-spacing:-.01em;color:var(--acc)}
+.seg .t span{font-size:7.6pt;color:var(--mute);letter-spacing:.04em}
+.seg h2{font-size:14.5pt;font-weight:900;letter-spacing:-.015em;color:var(--ink);margin-bottom:5px;line-height:1.2}
+.sp{color:var(--ink);font-size:10.6pt;line-height:1.62}
+.sp+.sp{margin-top:7px}
+.cue{display:inline-block;margin-top:8px;font-size:7.8pt;letter-spacing:.12em;font-weight:700;color:var(--acc);text-transform:uppercase}
+.hook{display:inline-block;margin:8px 0 0 0;font-size:9pt;font-weight:700;color:#6B4E00;background:var(--gold);border-radius:99px;padding:6px 14px}
+.vis{margin:8px 0 2px}
+.cap{font-size:7.8pt;color:var(--mute);margin-top:4px}
+.note{background:var(--acc-soft);border-radius:10px;padding:9px 13px;font-size:9.2pt;line-height:1.5;color:#2A3A8F;margin-top:8px}
+.note b{color:#1B2A78}
+.rew{margin-top:6px}
+.rew div{display:grid;grid-template-columns:20mm 1fr auto;align-items:baseline;border-top:1px solid var(--line);padding:5px 0}
+.rew div:last-child{border-bottom:1px solid var(--line)}
+.rew .v{font-size:15pt;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+.rew .v.neg{color:var(--warn)}
+.rew .tt{font-size:9.4pt;font-weight:700;color:var(--ink)}
+.rew .d{font-size:8pt;color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:8px}
+.two h3{font-size:7.8pt;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:3px}
+.two .y h3{color:var(--acc)}.two .x h3{color:var(--warn)}
+.two li{list-style:none;font-size:9.2pt;line-height:1.45;padding:4px 0;border-top:1px solid var(--line)}
+.big{font-size:17pt;line-height:1.2;font-weight:900;letter-spacing:-.02em;color:var(--ink);margin-top:10px}
+.big em{font-style:normal;color:var(--acc)}
+.qa .row{display:grid;grid-template-columns:48mm 1fr;gap:7mm;padding:6px 0;border-top:1px solid var(--line)}
+.qa .row:last-child{border-bottom:1px solid var(--line)}
+.qa .q{font-size:9.2pt;font-weight:900;color:var(--ink);line-height:1.35}
+.qa .a{font-size:8.9pt;line-height:1.45}
+.foot{position:absolute;left:20mm;right:20mm;bottom:7mm;display:flex;justify-content:space-between;font-size:7.4pt;color:var(--mute);letter-spacing:.04em}
+"""
+
+ARCH = """<svg viewBox="0 0 640 205" role="img" aria-label="Attacker, defender and environment with a training-only critic">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#14161F"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#2D50E6"/></marker></defs>
+<rect x="190" y="2" width="260" height="42" rx="21" fill="none" stroke="#2D50E6" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="320" y="22" text-anchor="middle" font-size="13" font-weight="900" fill="#2D50E6">CENTRAL CRITIC</text>
+<text x="320" y="36" text-anchor="middle" font-size="10" fill="#8A90A2">training only · sees both sides</text>
+<path d="M262 43 L96 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<path d="M320 44 L320 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<path d="M378 43 L544 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<rect x="0" y="92" width="180" height="64" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+<text x="90" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Attacker</text>
+<text x="90" y="138" text-anchor="middle" font-size="10" fill="#8A90A2">sees only its tactic hint</text>
+<rect x="230" y="92" width="180" height="64" rx="14" fill="#14161F"/>
+<text x="320" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">Defender</text>
+<text x="320" y="138" text-anchor="middle" font-size="10" fill="#A8AEC4">sees only the conversation</text>
+<rect x="460" y="92" width="180" height="64" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+<text x="550" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Environment</text>
+<text x="550" y="138" text-anchor="middle" font-size="10" fill="#8A90A2">leak detector scores the reply</text>
+<path d="M182 124 H228" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M412 124 H458" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="205" y="115" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">attack</text>
+<text x="435" y="115" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">reply</text>
+<path d="M550 156 V184 H90 V160" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+<path d="M320 184 V160" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+<text x="320" y="201" text-anchor="middle" font-size="10" font-weight="700" fill="#2D50E6">rewards flow back to both</text></svg>"""
+
+CLIP = """<svg viewBox="0 0 560 150" role="img" aria-label="Clipped objective flattens above ratio 1.2">
+<rect x="360" y="12" width="190" height="96" fill="#E9EDFD"/>
+<line x1="60" y1="108" x2="550" y2="108" stroke="#14161F"/><line x1="60" y1="12" x2="60" y2="108" stroke="#14161F"/>
+<line x1="270" y1="12" x2="270" y2="108" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+<line x1="180" y1="12" x2="180" y2="108" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+<path d="M360 50 L550 20" stroke="#D9502B" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+<text x="550" y="12" text-anchor="end" font-size="9" font-weight="700" fill="#D9502B">naive keeps growing</text>
+<path d="M60 102 L360 50 L550 50" stroke="#2D50E6" stroke-width="2.8" fill="none" stroke-linejoin="round"/>
+<circle cx="360" cy="50" r="4.5" fill="#2D50E6"/>
+<text x="455" y="94" text-anchor="middle" font-size="9" font-weight="700" fill="#2A3A8F">no extra push</text>
+<text x="180" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">0.8</text>
+<text x="270" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.0</text>
+<text x="360" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.2</text>
+<text x="305" y="142" text-anchor="middle" font-size="9" fill="#8A90A2">ratio = new policy ÷ old policy</text></svg>"""
+
+BARS = """<svg viewBox="0 0 560 100" role="img" aria-label="Share of 253 unseen attacks defended: 21, 65, 73, 100 percent">
+<g font-size="10" font-weight="700" fill="#4A5062"><text x="0" y="13">No defence</text><text x="0" y="38">SFT small</text><text x="0" y="63" fill="#2D50E6">MAPPO + SFT</text><text x="0" y="88">SFT big (400 ex.)</text></g>
+<g><rect x="110" y="3" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="3" width="84" height="12" rx="6" fill="#B4B9C8"/>
+<rect x="110" y="28" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="28" width="260" height="12" rx="6" fill="#B4B9C8"/>
+<rect x="110" y="53" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="53" width="292" height="12" rx="6" fill="#2D50E6"/>
+<rect x="110" y="78" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="78" width="400" height="12" rx="6" fill="#14161F"/></g>
+<g font-size="10" font-weight="900" fill="#14161F"><text x="520" y="13">21%</text><text x="520" y="38">65%</text><text x="520" y="63" fill="#2D50E6">73%</text><text x="520" y="88">100%</text></g></svg>"""
+
+REWARDS = """<div class="rew">
+<div><span class="v">+1.0</span><span class="tt">Refuse a real attack</span><span class="d">correct block</span></div>
+<div><span class="v">+1.0</span><span class="tt">Answer a normal question</span><span class="d">stay useful</span></div>
+<div><span class="v neg">−1.0</span><span class="tt">Refuse a normal question</span><span class="d">over-refusal</span></div>
+<div><span class="v neg">−1.5</span><span class="tt">Leak the secret</span><span class="d">heaviest penalty</span></div></div>"""
+
+CANSAY = """<div class="two">
+<div class="y"><h3>We can say</h3><ul><li>On top of small SFT, it is significantly better on unseen attack families.</li><li>No cost on common prompts.</li></ul></div>
+<div class="x"><h3>We cannot say</h3><ul><li>That it beats SFT. A bigger SFT set reached 1.00.</li><li>That it works alone, or fixes over-refusal.</li></ul></div></div>"""
+
+def timeline(segs, total):
+    """segs: list of (start_sec, label). Proportional bar."""
+    W = 640
+    parts, x = [], 0
+    ends = [s for s, _ in segs[1:]] + [total]
+    for i, ((st, lab), en) in enumerate(zip(segs, ends)):
+        w = (en - st) / total * W
+        col = "#2D50E6" if i % 2 == 0 else "#14161F"
+        parts.append(f'<rect x="{x+1:.1f}" y="0" width="{w-2:.1f}" height="9" rx="4.5" fill="{col}"/>')
+        parts.append(f'<text x="{x+1:.1f}" y="26" font-size="9" font-weight="900" fill="#14161F">{st//60}:{st%60:02d}</text>')
+        parts.append(f'<text x="{x+1:.1f}" y="38" font-size="8" fill="#8A90A2">{lab}</text>')
+        x += w
+    parts.append(f'<text x="{W}" y="26" text-anchor="end" font-size="9" font-weight="900" fill="#14161F">{total//60}:{total%60:02d}</text>')
+    return f'<svg viewBox="0 0 {W} 42" class="tl" role="img" aria-label="Talk timeline">' + "".join(parts) + "</svg>"
+
+def seg(start, dur, title, paras, extra="", cue=""):
+    ps = "".join(f'<p class="sp">{p}</p>' for p in paras)
+    c = f'<span class="cue">{cue}</span>' if cue else ""
+    return (f'<div class="seg"><div class="t"><b>{start//60}:{start%60:02d}</b><span>{dur} sec</span></div>'
+            f'<div><h2>{title}</h2>{ps}{c}{extra}</div></div>')
+
+def words(paras): return sum(len(re.sub(r"<[^>]+>", "", p).split()) for p in paras)
+
+def page(inner, n, N, label):
+    return f'<div class="page">{inner}<div class="foot"><span>{label}</span><span>{n} / {N}</span></div></div>'
+
+def doc(title, pages):
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{title}</title><style>{CSS}</style></head><body>{"".join(pages)}</body></html>'
+
+
+def build(name, label, title, lede, S, labels, page_plan, closing, qa_html, target, inline_qa=False, detach=()):
+    """S: list of (title, paras, extra, cue). Timestamps are computed from word counts."""
+    segs, t = [], 0
+    for ttl, paras, extra, cue in S:
+        w = words(paras); dur = round(w / WPM * 60)
+        segs.append((t, dur, ttl, paras, extra, cue, w)); t += dur
+    total = t
+    mm, ss = divmod(total, 60)
+    tw = sum(s[6] for s in segs)
+    tl = timeline([(s[0], labels[s[2]]) for s in segs], total)
+    head_html = (f'<div class="eyebrow">MAPPO · speaker script</div><h1>The <i>{title}</i> version</h1>'
+                 f'<p class="lede">{lede}</p><div class="meta"><div><b>{mm}:{ss:02d}</b>spoken length</div>'
+                 f'<div><b>{tw}</b>words</div><div><b>{WPM}</b>words per minute</div></div>{tl}')
+    blocks = [seg(s, d, ttl, ps, ("" if i in detach else ex), cue) for i, (s, d, ttl, ps, ex, cue, w) in enumerate(segs)]
+    figs = {i: f'<div class="seg" style="border-top:0;padding-top:0"><div class="t"></div><div><span class="cue" style="margin-top:0">Figure · {segs[i][2]}</span>{segs[i][4]}</div></div>' for i in detach}
+    pages = []
+    N = len(page_plan) + (1 if (qa_html and not inline_qa) else 0)
+    for i, idxs in enumerate(page_plan):
+        inner = (head_html if i == 0 else "") + "".join(figs[j[1]] if isinstance(j, tuple) else blocks[j] for j in idxs)
+        if i == len(page_plan) - 1:
+            inner += closing
+            if inline_qa: inner += '<div class="eyebrow" style="margin-top:14px">If they probe</div>' + qa_html
+        pages.append(page(inner, i + 1, N, label))
+    if qa_html and not inline_qa:
+        pages.append(page('<div class="eyebrow">If they probe</div><h1 style="font-size:24pt">Questions you may get</h1>' + qa_html, N, N, label))
+    (OUT / f"{name}.html").write_text(doc(label, pages))
+    print(f"{name}: {tw} words, {mm}:{ss:02d}  (target ~{target} min)  per-seg:",
+          [(s[2][:18], s[6], f"{s[0]//60}:{s[0]%60:02d}") for s in segs])
+
+# ============================== 5 MINUTES ==============================
+S5 = [
+ ("What MAPPO is", [
+  "Let me start with what MAPPO is. It stands for multi-agent proximal policy optimization, and it is a reinforcement learning method. Instead of showing a model the right answer, we let it act, score what happened, and nudge it toward whatever scored well.",
+  "The multi-agent part means several agents learn at the same time. We train two. An attacker, whose job is to extract our secret word, CAPSTONE. And a defender, whose job is to protect it while still answering normal questions.",
+  "During training, one shared critic watches both sides and judges every outcome. At deployment the critic is gone and the defender acts alone. Two players, one referee in practice, no referee in the real game."], ARCH, "Show: architecture diagram"),
+ ("How it differs from naive policy gradient", [
+  "So how is that different from the basic approach, naive policy gradient? Naive policy gradient is simple: try an action, get a reward, and make that action more likely if it paid off. It has two problems.",
+  "The first is noise. A reward of plus one tells you nothing if you always get plus one. So MAPPO adds a critic that predicts what is normal, and learns from the advantage: was this outcome better or worse than expected?",
+  "The second is step size. One large update can wreck a model that took hours to train. So the update is clipped: the new policy is compared to the old one, and it is not allowed to move far in a single step. It can improve, but it cannot leap. Small, safe steps."], CLIP, "Show: clip chart"),
+ ("Why we used it instead of SFT", [
+  "Why did we use it here instead of plain supervised fine-tuning, or SFT? SFT teaches by imitation. We show it an attack and the correct refusal, and it copies. It only learns the examples we wrote, and it never experiences what its own answer actually does.",
+  "With MAPPO, the defender writes its own answer, and the environment tells it what happened. Refuse a real attack: plus one. Answer a normal question: plus one. Refuse a normal question, which is over-refusal: minus one. And leak the secret: minus one point five, the heaviest penalty.",
+  "So the model remembers which action led to which outcome. Think of SFT as memorising the answer key, and MAPPO as doing the problems and learning from the marks. And because about a third of training is normal questions, refusing everything cannot win. We also hoped the co-trained attacker would invent attacks we never wrote by hand."], REWARDS, "Show: reward table"),
+ ("How we built it", [
+  "Here is how it runs in our project. Each round, the attacker writes an attack from a tactic hint, and the defender replies. A leak detector scores the reply, and it checks plain text but also base64, ROT13, leetspeak and other disguises.",
+  "The critic predicts the expected reward, we compute each agent's advantage, and both models take one clipped step, with a penalty that keeps them close to a reference model so they do not drift into gibberish. Both agents share one small half-billion-parameter model with lightweight LoRA adapters, which is why this trains on a laptop.",
+  "One honest design decision: we warm-start the defender from an SFT model. When we tried MAPPO from scratch, it simply failed to learn the task."], "", ""),
+ ("What it gave us, honestly", [
+  "So what did we get? We tested on two hundred and fifty-three attacks from families the training never saw. MAPPO on top of a small SFT blocked 73 percent, versus 65 percent for that SFT alone. That is statistically significant, and leaks dropped from 6.7 percent to 3.5 percent, with no cost on everyday questions.",
+  "But I want to be straightforward about what we cannot say. We cannot say MAPPO beats SFT. A bigger, more varied SFT set reached a hundred percent, and MAPPO added nothing on top of it. MAPPO also did not fix over-refusal, and it cannot work alone.",
+  "So the takeaway: MAPPO is a useful refinement on top of SFT, not a replacement for good supervised data."], BARS + CANSAY, "Show: results bars"),
+]
+L5 = {"What MAPPO is":"What","How it differs from naive policy gradient":"Vs naive","Why we used it instead of SFT":"Why","How we built it":"Built","What it gave us, honestly":"Result"}
+CLOSE5 = '<div class="big">MAPPO is a <em>refinement</em> on top of SFT, not a <em>replacement</em>.</div><span class="hook">Say this last.</span>'
+QA5 = """<div class="qa" style="margin-top:12px">
+<div class="row"><div class="q">Why not plain PPO?</div><div class="a">The opponent keeps changing. The shared critic gives both agents a stable baseline.</div></div>
+<div class="row"><div class="q">Why warm-start from SFT?</div><div class="a">A 0.5B model cannot find the attack versus normal boundary by exploration alone; SFT supplies it and RL refines it.</div></div>
+<div class="row"><div class="q">Is the gain real?</div><div class="a">Yes on unseen attacks vs the small SFT (Fisher p = 0.012). Differences in over-refusal are not significant.</div></div></div>"""
+build("mappo_5min", "MAPPO · 5-minute script", "5-minute", "Say it in this order. Every block has a time stamp and a cue for what to show on screen.",
+      S5, L5, [[0], [1, 2], [3, 4]], CLOSE5, QA5, 5, inline_qa=True)
+
+# ============================== 10 MINUTES ==============================
+S10 = [
+ ("The problem we are solving", [
+  "Let me set up the problem. Prompt injection is when a user tricks a language model into breaking the rules it was given. It is a real security concern for any assistant that holds instructions or private information.",
+  "We made it measurable. The model is given one secret word, CAPSTONE, and told never to reveal it. Then attackers try everything: a direct request, role-play, encoding tricks, translation, instructions that claim to override the rules, and slow multi-turn pressure.",
+  "A good defence has two jobs. It must never leak, and it must stay useful. A model that refuses everything is perfectly safe and completely worthless, so every result you will see measures both. Our question was whether reinforcement learning, specifically MAPPO, can do this better than the simpler supervised approach."], "", ""),
+ ("What MAPPO is, and CTDE", [
+  "MAPPO stands for multi-agent proximal policy optimization. Reinforcement learning means the model is not told the answer. It acts, gets a reward for what happened, and shifts toward behaviour that earns more. Multi-agent means several learners at once.",
+  "We train two: an attacker and a defender. Both share one small Qwen half-billion-parameter language model, and each gets its own lightweight LoRA adapter. That is what lets all of this fit on a sixteen gigabyte laptop. The attacker sees only its tactic hint, such as use base64. The defender sees only the conversation.",
+  "The key design is called CTDE: centralized training, decentralized execution. During training we use a critic, a frozen MiniLM encoder with two value heads, that sees the attack and the response together and judges how good each side's outcome was. At deployment the critic disappears. The defender only ever sees the conversation in front of it.",
+  "Why one shared critic rather than one per agent? Because the attacker's success is the defender's failure. A critic that sees both sides gives a consistent picture of who is winning, and that steadies a training game where both players keep changing.",
+  "Two players, one referee during practice, no referee in the real game."], ARCH, "Show: architecture diagram (top of next page)"),
+ ("How it differs from naive policy gradient", [
+  "Now, how does this differ from the basic approach, naive policy gradient? Naive policy gradient is: try an action, get a reward, and make that action more likely if it paid off. It has two weaknesses.",
+  "The first is variance. A reward of plus one means nothing if you always get plus one. So MAPPO's critic learns a baseline, a prediction of what is normal here, and we train on the advantage: the reward plus the discounted value of what comes next, minus the value of where we are now. In plain words, was this better or worse than expected? That makes learning far more stable.",
+  "The second weakness is step size. One large update can wreck a model. So the clipped objective compares the new policy to the old one with a ratio, and clips that ratio to between 0.8 and 1.2. Beyond that range the objective goes flat, so there is no extra reward for pushing further. The model can improve, but it cannot leap. The formula on screen is the whole idea: take the smaller of the raw improvement and the clipped improvement.",
+  "There is one more safeguard. A KL penalty keeps the model close to a reference policy, so while chasing reward it does not drift into gibberish. Critic for stability, clip for safe steps, KL for sanity."], CLIP, "Show: clip chart and the one-line formula"),
+ ("Our proof the clip matters: the v1 bug", [
+  "I want to show you where this bites, because our own first run broke it. We compared a mean log-probability at rollout time to a summed one at update time. The ratio that should have been one came out around 0.56.",
+  "That put every update outside the clip range. For any bad action, the clipped objective became a constant, so the gradient was exactly zero. The model could reinforce what it liked, but it could never unlearn anything. It collapsed.",
+  "The scary part: it still scored only 5 percent attack success, which looks like a great defence. But 62 percent of its normal answers were unusable. Only a capability check caught it. After the fix, the ratio at iteration zero was 0.997."], "", ""),
+ ("Why MAPPO instead of SFT", [
+  "So why use MAPPO instead of supervised fine-tuning? SFT teaches by imitation. We show it an attack and the correct refusal, and it copies. It only learns the examples we wrote, and it never experiences the consequence of its own answer.",
+  "With MAPPO, the defender generates its own reply, and the environment tells it what happened. Refuse a real attack: plus one. Answer a normal question: plus one. Refuse a normal question, which is over-refusal: minus one. Leak the secret: minus one point five, the heaviest penalty. So the model remembers which action led to which outcome and shifts toward what scores well.",
+  "An analogy: SFT is a student who memorises the worked answers. MAPPO is a student who does the problems, gets marked, and learns from the marks. Both can pass, but only the second ever learns what its own mistakes cost.",
+  "Between thirty and forty percent of training episodes are ordinary questions, so refusing everything can never be the winning strategy. We even wrote a check that computes the expected reward of degenerate policies like blanket refusal, to make sure the intended behaviour beats them.",
+  "And we hoped for an adversarial benefit. Prompt injection is a moving target, and a co-trained attacker can produce attacks we did not write by hand."], REWARDS, "Show: reward table"),
+ ("How we built it", [
+  "Here is one training round. The attacker takes a tactic hint and writes an attack. The defender replies. A leak detector scores the reply, and it is strict: it looks for the secret in plain text, but also in base64, ROT13, leetspeak, reversed, separated by dashes, or hidden as an acrostic.",
+  "The critic then predicts the reward for each agent, we compute the advantage, and each adapter takes a clipped step with a KL leash. Settings are modest: learning rate one in ten to the fifth, clip 0.2, batches of eight, ninety iterations, and three to five random seeds. We pick checkpoints on a separate validation split, never on the test attacks.",
+  "The most important design decision was warm-starting the defender from an SFT model. When we ran MAPPO from scratch, it failed to learn the task: a small model cannot discover the boundary between an attack and a normal question by trial and error alone, because refusing always pays better than guessing. SFT supplies that boundary, and reinforcement learning refines it."], "", ""),
+ ("What it gave us", [
+  "We tested on two hundred and fifty-three held-out attacks from families the training never saw. With no defence, 21 percent were blocked. A small SFT model blocked 65. MAPPO on top of that SFT blocked 73, which is significant at p equals 0.012. Leaks fell from 6.7 to 3.5 percent, with no cost on everyday prompts.",
+  "To keep this honest, we picked checkpoints on a separate validation split with zero leaks, we ran five seeds, and common prompts stayed near perfect: 96 of 100 normal questions answered and 98 of 100 familiar attacks blocked.",
+  "But a bigger, more varied SFT set blocked all of them, and MAPPO on top of it added nothing."], BARS, "Show: results bars"),
+ ("What we cannot claim, and what is next", [
+  "So here is what we cannot claim. We cannot say MAPPO beats SFT in general. It does not fix over-refusal on unseen normal questions. It does not work alone. And our learned attacker turned out too weak to separate the defenders, so our robustness claim rests on the held-out suite, not on the self-play.",
+  "What would we do next? A stronger attacker, a pretrained attack classifier inside the reward, and a curriculum that starts with attacks the model can already detect.",
+  "So the one-sentence takeaway: MAPPO is a refinement layer on top of SFT, not a replacement for good supervised data."], CANSAY, ""),
+]
+L10 = {"The problem we are solving":"Problem","What MAPPO is, and CTDE":"MAPPO","How it differs from naive policy gradient":"Vs naive","Our proof the clip matters: the v1 bug":"v1 bug","Why MAPPO instead of SFT":"Why","How we built it":"Built","What it gave us":"Result","What we cannot claim, and what is next":"Limits"}
+CLOSE10 = '<div class="big">MAPPO is a <em>refinement</em> on top of SFT, not a <em>replacement</em> for good supervised data.</div><span class="hook">Say this last.</span>'
+QA10 = """<div class="qa" style="margin-top:6px">
+<div class="row"><div class="q">Why not plain PPO?</div><div class="a">The opponent keeps changing. The shared critic gives both agents a stable baseline.</div></div>
+<div class="row"><div class="q">What is “centralized” here?</div><div class="a">Only the critic sees attack and response together. The actors see just their own input.</div></div>
+<div class="row"><div class="q">Why is the KL penalty there?</div><div class="a">It stops drift into gibberish. It is a soft penalty, and we measured the drift rather than claiming a hard budget.</div></div>
+<div class="row"><div class="q">Is the result meaningful?</div><div class="a">The gain over small SFT on unseen attacks is significant (Fisher p = 0.012). Over-refusal differences are not.</div></div>
+<div class="row"><div class="q">Biggest failure?</div><div class="a">The v1 ratio bug, and the attacker collapsing into echoing its own instructions. Our detector missed it, so we sampled the policies directly.</div></div>
+<div class="row"><div class="q">Why is reward hacking a concern?</div><div class="a">A reward can be met by a broken policy. In seed 1 evasive non-refusals were rewarded, so we set that reward from +0.40 to 0.</div></div>
+<div class="row"><div class="q">Real-world use?</div><div class="a">Only the relative ranking transfers. This is a 0.5B model on one secret word, not frontier red-teaming.</div></div></div>"""
+build("mappo_10min", "MAPPO · 10-minute script", "10-minute", "The same story with the problem, the v1 bug and the build in full. Time stamps are cumulative.",
+      S10, L10, [[0, 1], [("x", 1), 2], [3, 4], [5, 6], [7]], CLOSE10, QA10, 10, inline_qa=True, detach={1})

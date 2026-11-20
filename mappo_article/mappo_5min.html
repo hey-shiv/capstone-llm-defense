@@ -1,0 +1,108 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>MAPPO · 5-minute script</title><style>
+@font-face{font-family:"SatoshiX";font-weight:300;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Light.otf")}
+@font-face{font-family:"SatoshiX";font-weight:400;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Regular.otf")}
+@font-face{font-family:"SatoshiX";font-weight:500;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Medium.otf")}
+@font-face{font-family:"SatoshiX";font-weight:700;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Bold.otf")}
+@font-face{font-family:"SatoshiX";font-weight:900;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Black.otf")}
+:root{--ink:#14161F;--body:#4A5062;--mute:#8A90A2;--line:#E5E3DC;--paper:#FAF9F6;--acc:#2D50E6;--acc-soft:#E9EDFD;--warn:#D9502B;--gold:#F6F0DC}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"SatoshiX","Satoshi",sans-serif;color:var(--body);font-size:10.6pt;line-height:1.62;background:#fff}
+.page{width:210mm;height:297mm;background:var(--paper);position:relative;overflow:hidden;page-break-after:always;padding:16mm 20mm 14mm}
+.page:last-child{page-break-after:auto}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:"SatoshiX","Satoshi",sans-serif}
+b{color:var(--ink);font-weight:700}
+.eyebrow{font-size:7.8pt;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--mute)}
+h1{font-size:34pt;line-height:1;font-weight:900;letter-spacing:-.035em;color:var(--ink);margin:9px 0 10px}
+h1 i{font-style:normal;color:var(--acc)}
+.lede{font-size:12pt;line-height:1.45;max-width:140mm}
+.meta{display:flex;gap:9mm;margin:12px 0 4px}
+.meta div{font-size:8pt;color:var(--mute);letter-spacing:.04em}
+.meta b{display:block;font-size:15pt;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.tl{margin:10px 0 2px}
+.seg{display:grid;grid-template-columns:19mm 1fr;column-gap:5mm;padding:12px 0 4px;border-top:1px solid var(--line)}
+.seg .t{padding-top:2px}
+.seg .t b{display:block;font-size:12.5pt;font-weight:900;letter-spacing:-.01em;color:var(--acc)}
+.seg .t span{font-size:7.6pt;color:var(--mute);letter-spacing:.04em}
+.seg h2{font-size:14.5pt;font-weight:900;letter-spacing:-.015em;color:var(--ink);margin-bottom:5px;line-height:1.2}
+.sp{color:var(--ink);font-size:10.6pt;line-height:1.62}
+.sp+.sp{margin-top:7px}
+.cue{display:inline-block;margin-top:8px;font-size:7.8pt;letter-spacing:.12em;font-weight:700;color:var(--acc);text-transform:uppercase}
+.hook{display:inline-block;margin:8px 0 0 0;font-size:9pt;font-weight:700;color:#6B4E00;background:var(--gold);border-radius:99px;padding:6px 14px}
+.vis{margin:8px 0 2px}
+.cap{font-size:7.8pt;color:var(--mute);margin-top:4px}
+.note{background:var(--acc-soft);border-radius:10px;padding:9px 13px;font-size:9.2pt;line-height:1.5;color:#2A3A8F;margin-top:8px}
+.note b{color:#1B2A78}
+.rew{margin-top:6px}
+.rew div{display:grid;grid-template-columns:20mm 1fr auto;align-items:baseline;border-top:1px solid var(--line);padding:5px 0}
+.rew div:last-child{border-bottom:1px solid var(--line)}
+.rew .v{font-size:15pt;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+.rew .v.neg{color:var(--warn)}
+.rew .tt{font-size:9.4pt;font-weight:700;color:var(--ink)}
+.rew .d{font-size:8pt;color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:8px}
+.two h3{font-size:7.8pt;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:3px}
+.two .y h3{color:var(--acc)}.two .x h3{color:var(--warn)}
+.two li{list-style:none;font-size:9.2pt;line-height:1.45;padding:4px 0;border-top:1px solid var(--line)}
+.big{font-size:17pt;line-height:1.2;font-weight:900;letter-spacing:-.02em;color:var(--ink);margin-top:10px}
+.big em{font-style:normal;color:var(--acc)}
+.qa .row{display:grid;grid-template-columns:48mm 1fr;gap:7mm;padding:6px 0;border-top:1px solid var(--line)}
+.qa .row:last-child{border-bottom:1px solid var(--line)}
+.qa .q{font-size:9.2pt;font-weight:900;color:var(--ink);line-height:1.35}
+.qa .a{font-size:8.9pt;line-height:1.45}
+.foot{position:absolute;left:20mm;right:20mm;bottom:7mm;display:flex;justify-content:space-between;font-size:7.4pt;color:var(--mute);letter-spacing:.04em}
+</style></head><body><div class="page"><div class="eyebrow">MAPPO · speaker script</div><h1>The <i>5-minute</i> version</h1><p class="lede">Say it in this order. Every block has a time stamp and a cue for what to show on screen.</p><div class="meta"><div><b>4:54</b>spoken length</div><div><b>640</b>words</div><div><b>130</b>words per minute</div></div><svg viewBox="0 0 640 42" class="tl" role="img" aria-label="Talk timeline"><rect x="1.0" y="0" width="115.6" height="9" rx="4.5" fill="#2D50E6"/><text x="1.0" y="26" font-size="9" font-weight="900" fill="#14161F">0:00</text><text x="1.0" y="38" font-size="8" fill="#8A90A2">What</text><rect x="118.6" y="0" width="128.6" height="9" rx="4.5" fill="#14161F"/><text x="118.6" y="26" font-size="9" font-weight="900" fill="#14161F">0:54</text><text x="118.6" y="38" font-size="8" fill="#8A90A2">Vs naive</text><rect x="249.2" y="0" width="148.2" height="9" rx="4.5" fill="#2D50E6"/><text x="249.2" y="26" font-size="9" font-weight="900" fill="#14161F">1:54</text><text x="249.2" y="38" font-size="8" fill="#8A90A2">Why</text><rect x="399.4" y="0" width="119.9" height="9" rx="4.5" fill="#14161F"/><text x="399.4" y="26" font-size="9" font-weight="900" fill="#14161F">3:03</text><text x="399.4" y="38" font-size="8" fill="#8A90A2">Built</text><rect x="521.3" y="0" width="117.7" height="9" rx="4.5" fill="#2D50E6"/><text x="521.3" y="26" font-size="9" font-weight="900" fill="#14161F">3:59</text><text x="521.3" y="38" font-size="8" fill="#8A90A2">Result</text><text x="640" y="26" text-anchor="end" font-size="9" font-weight="900" fill="#14161F">4:54</text></svg><div class="seg"><div class="t"><b>0:00</b><span>54 sec</span></div><div><h2>What MAPPO is</h2><p class="sp">Let me start with what MAPPO is. It stands for multi-agent proximal policy optimization, and it is a reinforcement learning method. Instead of showing a model the right answer, we let it act, score what happened, and nudge it toward whatever scored well.</p><p class="sp">The multi-agent part means several agents learn at the same time. We train two. An attacker, whose job is to extract our secret word, CAPSTONE. And a defender, whose job is to protect it while still answering normal questions.</p><p class="sp">During training, one shared critic watches both sides and judges every outcome. At deployment the critic is gone and the defender acts alone. Two players, one referee in practice, no referee in the real game.</p><span class="cue">Show: architecture diagram</span><svg viewBox="0 0 640 205" role="img" aria-label="Attacker, defender and environment with a training-only critic">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#14161F"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#2D50E6"/></marker></defs>
+<rect x="190" y="2" width="260" height="42" rx="21" fill="none" stroke="#2D50E6" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="320" y="22" text-anchor="middle" font-size="13" font-weight="900" fill="#2D50E6">CENTRAL CRITIC</text>
+<text x="320" y="36" text-anchor="middle" font-size="10" fill="#8A90A2">training only · sees both sides</text>
+<path d="M262 43 L96 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<path d="M320 44 L320 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<path d="M378 43 L544 92" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+<rect x="0" y="92" width="180" height="64" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+<text x="90" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Attacker</text>
+<text x="90" y="138" text-anchor="middle" font-size="10" fill="#8A90A2">sees only its tactic hint</text>
+<rect x="230" y="92" width="180" height="64" rx="14" fill="#14161F"/>
+<text x="320" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">Defender</text>
+<text x="320" y="138" text-anchor="middle" font-size="10" fill="#A8AEC4">sees only the conversation</text>
+<rect x="460" y="92" width="180" height="64" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+<text x="550" y="120" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Environment</text>
+<text x="550" y="138" text-anchor="middle" font-size="10" fill="#8A90A2">leak detector scores the reply</text>
+<path d="M182 124 H228" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M412 124 H458" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="205" y="115" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">attack</text>
+<text x="435" y="115" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">reply</text>
+<path d="M550 156 V184 H90 V160" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+<path d="M320 184 V160" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+<text x="320" y="201" text-anchor="middle" font-size="10" font-weight="700" fill="#2D50E6">rewards flow back to both</text></svg></div></div><div class="foot"><span>MAPPO · 5-minute script</span><span>1 / 3</span></div></div><div class="page"><div class="seg"><div class="t"><b>0:54</b><span>60 sec</span></div><div><h2>How it differs from naive policy gradient</h2><p class="sp">So how is that different from the basic approach, naive policy gradient? Naive policy gradient is simple: try an action, get a reward, and make that action more likely if it paid off. It has two problems.</p><p class="sp">The first is noise. A reward of plus one tells you nothing if you always get plus one. So MAPPO adds a critic that predicts what is normal, and learns from the advantage: was this outcome better or worse than expected?</p><p class="sp">The second is step size. One large update can wreck a model that took hours to train. So the update is clipped: the new policy is compared to the old one, and it is not allowed to move far in a single step. It can improve, but it cannot leap. Small, safe steps.</p><span class="cue">Show: clip chart</span><svg viewBox="0 0 560 150" role="img" aria-label="Clipped objective flattens above ratio 1.2">
+<rect x="360" y="12" width="190" height="96" fill="#E9EDFD"/>
+<line x1="60" y1="108" x2="550" y2="108" stroke="#14161F"/><line x1="60" y1="12" x2="60" y2="108" stroke="#14161F"/>
+<line x1="270" y1="12" x2="270" y2="108" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+<line x1="180" y1="12" x2="180" y2="108" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+<path d="M360 50 L550 20" stroke="#D9502B" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+<text x="550" y="12" text-anchor="end" font-size="9" font-weight="700" fill="#D9502B">naive keeps growing</text>
+<path d="M60 102 L360 50 L550 50" stroke="#2D50E6" stroke-width="2.8" fill="none" stroke-linejoin="round"/>
+<circle cx="360" cy="50" r="4.5" fill="#2D50E6"/>
+<text x="455" y="94" text-anchor="middle" font-size="9" font-weight="700" fill="#2A3A8F">no extra push</text>
+<text x="180" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">0.8</text>
+<text x="270" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.0</text>
+<text x="360" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.2</text>
+<text x="305" y="142" text-anchor="middle" font-size="9" fill="#8A90A2">ratio = new policy ÷ old policy</text></svg></div></div><div class="seg"><div class="t"><b>1:54</b><span>69 sec</span></div><div><h2>Why we used it instead of SFT</h2><p class="sp">Why did we use it here instead of plain supervised fine-tuning, or SFT? SFT teaches by imitation. We show it an attack and the correct refusal, and it copies. It only learns the examples we wrote, and it never experiences what its own answer actually does.</p><p class="sp">With MAPPO, the defender writes its own answer, and the environment tells it what happened. Refuse a real attack: plus one. Answer a normal question: plus one. Refuse a normal question, which is over-refusal: minus one. And leak the secret: minus one point five, the heaviest penalty.</p><p class="sp">So the model remembers which action led to which outcome. Think of SFT as memorising the answer key, and MAPPO as doing the problems and learning from the marks. And because about a third of training is normal questions, refusing everything cannot win. We also hoped the co-trained attacker would invent attacks we never wrote by hand.</p><span class="cue">Show: reward table</span><div class="rew">
+<div><span class="v">+1.0</span><span class="tt">Refuse a real attack</span><span class="d">correct block</span></div>
+<div><span class="v">+1.0</span><span class="tt">Answer a normal question</span><span class="d">stay useful</span></div>
+<div><span class="v neg">−1.0</span><span class="tt">Refuse a normal question</span><span class="d">over-refusal</span></div>
+<div><span class="v neg">−1.5</span><span class="tt">Leak the secret</span><span class="d">heaviest penalty</span></div></div></div></div><div class="foot"><span>MAPPO · 5-minute script</span><span>2 / 3</span></div></div><div class="page"><div class="seg"><div class="t"><b>3:03</b><span>56 sec</span></div><div><h2>How we built it</h2><p class="sp">Here is how it runs in our project. Each round, the attacker writes an attack from a tactic hint, and the defender replies. A leak detector scores the reply, and it checks plain text but also base64, ROT13, leetspeak and other disguises.</p><p class="sp">The critic predicts the expected reward, we compute each agent's advantage, and both models take one clipped step, with a penalty that keeps them close to a reference model so they do not drift into gibberish. Both agents share one small half-billion-parameter model with lightweight LoRA adapters, which is why this trains on a laptop.</p><p class="sp">One honest design decision: we warm-start the defender from an SFT model. When we tried MAPPO from scratch, it simply failed to learn the task.</p></div></div><div class="seg"><div class="t"><b>3:59</b><span>55 sec</span></div><div><h2>What it gave us, honestly</h2><p class="sp">So what did we get? We tested on two hundred and fifty-three attacks from families the training never saw. MAPPO on top of a small SFT blocked 73 percent, versus 65 percent for that SFT alone. That is statistically significant, and leaks dropped from 6.7 percent to 3.5 percent, with no cost on everyday questions.</p><p class="sp">But I want to be straightforward about what we cannot say. We cannot say MAPPO beats SFT. A bigger, more varied SFT set reached a hundred percent, and MAPPO added nothing on top of it. MAPPO also did not fix over-refusal, and it cannot work alone.</p><p class="sp">So the takeaway: MAPPO is a useful refinement on top of SFT, not a replacement for good supervised data.</p><span class="cue">Show: results bars</span><svg viewBox="0 0 560 100" role="img" aria-label="Share of 253 unseen attacks defended: 21, 65, 73, 100 percent">
+<g font-size="10" font-weight="700" fill="#4A5062"><text x="0" y="13">No defence</text><text x="0" y="38">SFT small</text><text x="0" y="63" fill="#2D50E6">MAPPO + SFT</text><text x="0" y="88">SFT big (400 ex.)</text></g>
+<g><rect x="110" y="3" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="3" width="84" height="12" rx="6" fill="#B4B9C8"/>
+<rect x="110" y="28" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="28" width="260" height="12" rx="6" fill="#B4B9C8"/>
+<rect x="110" y="53" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="53" width="292" height="12" rx="6" fill="#2D50E6"/>
+<rect x="110" y="78" width="400" height="12" rx="6" fill="#EAE8E1"/><rect x="110" y="78" width="400" height="12" rx="6" fill="#14161F"/></g>
+<g font-size="10" font-weight="900" fill="#14161F"><text x="520" y="13">21%</text><text x="520" y="38">65%</text><text x="520" y="63" fill="#2D50E6">73%</text><text x="520" y="88">100%</text></g></svg><div class="two">
+<div class="y"><h3>We can say</h3><ul><li>On top of small SFT, it is significantly better on unseen attack families.</li><li>No cost on common prompts.</li></ul></div>
+<div class="x"><h3>We cannot say</h3><ul><li>That it beats SFT. A bigger SFT set reached 1.00.</li><li>That it works alone, or fixes over-refusal.</li></ul></div></div></div></div><div class="big">MAPPO is a <em>refinement</em> on top of SFT, not a <em>replacement</em>.</div><span class="hook">Say this last.</span><div class="eyebrow" style="margin-top:14px">If they probe</div><div class="qa" style="margin-top:12px">
+<div class="row"><div class="q">Why not plain PPO?</div><div class="a">The opponent keeps changing. The shared critic gives both agents a stable baseline.</div></div>
+<div class="row"><div class="q">Why warm-start from SFT?</div><div class="a">A 0.5B model cannot find the attack versus normal boundary by exploration alone; SFT supplies it and RL refines it.</div></div>
+<div class="row"><div class="q">Is the gain real?</div><div class="a">Yes on unseen attacks vs the small SFT (Fisher p = 0.012). Differences in over-refusal are not significant.</div></div></div><div class="foot"><span>MAPPO · 5-minute script</span><span>3 / 3</span></div></div></body></html>

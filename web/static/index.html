@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attack console</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main>
+  <form id="form" autocomplete="off">
+    <label for="prompt" class="sr">Prompt</label>
+    <textarea id="prompt" rows="3" maxlength="2000" placeholder="Type a prompt and press Enter" autofocus required></textarea>
+    <button type="submit" id="run" disabled>Loading model…</button>
+  </form>
+
+  <div class="lanes" id="lanes" hidden>
+    <section class="lane" data-arm="base"><h2>SFT</h2><pre></pre></section>
+    <section class="lane" data-arm="sft" hidden><h2>SFT</h2><pre></pre></section>
+    <section class="lane" data-arm="mappo"><h2>MAPPO</h2><pre></pre></section>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

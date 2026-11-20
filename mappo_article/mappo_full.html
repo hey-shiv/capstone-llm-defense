@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MAPPO presenter guide</title>
+<style>
+@font-face{font-family:"SatoshiX";font-weight:300;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Light.otf")}
+@font-face{font-family:"SatoshiX";font-weight:400;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Regular.otf")}
+@font-face{font-family:"SatoshiX";font-weight:400;font-style:italic;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Italic.otf")}
+@font-face{font-family:"SatoshiX";font-weight:500;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Medium.otf")}
+@font-face{font-family:"SatoshiX";font-weight:700;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Bold.otf")}
+@font-face{font-family:"SatoshiX";font-weight:900;src:url("file:///Users/shivashant/Library/Fonts/Satoshi-Black.otf")}
+:root{--ink:#14161F;--body:#4A5062;--mute:#8A90A2;--line:#E5E3DC;--paper:#FAF9F6;--acc:#2D50E6;--acc-soft:#E9EDFD;--warn:#D9502B;--warn-soft:#FBEAE4;--gold-soft:#F6F0DC;}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"SatoshiX","Satoshi",sans-serif;color:var(--body);font-size:10.4pt;line-height:1.6;background:#fff}
+.page{width:210mm;height:297mm;background:var(--paper);position:relative;overflow:hidden;page-break-after:always;padding:17mm 21mm 15mm}
+.page:last-child{page-break-after:auto}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:"SatoshiX","Satoshi",sans-serif}
+b{color:var(--ink);font-weight:700}
+
+.eyebrow{font-size:7.8pt;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--mute)}
+h1{font-size:38pt;line-height:1;font-weight:900;letter-spacing:-.035em;color:var(--ink);margin:10px 0 12px}
+h1 i{font-style:normal;color:var(--acc)}
+.lede{font-size:13.5pt;line-height:1.45;color:var(--body);max-width:135mm}
+.rule{height:1px;background:var(--line);margin:8mm 0}
+
+.sec{display:grid;grid-template-columns:14mm 1fr}
+.no{font-size:9pt;font-weight:700;color:var(--acc);letter-spacing:.08em;padding-top:7px}
+h2{font-size:21pt;line-height:1.15;font-weight:900;letter-spacing:-.02em;color:var(--ink);margin-bottom:8px}
+h3.s{font-size:8pt;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--mute);margin:14px 0 5px}
+.sec p{max-width:142mm}
+.sec p+p{margin-top:8px}
+.ind{margin-left:14mm}
+
+.say{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 13px;margin-top:12px}
+.say .lab{display:block;font-size:7.6pt;letter-spacing:.2em;font-weight:900;color:var(--acc);margin-bottom:5px}
+.say p{font-size:10.2pt;line-height:1.58;color:var(--ink);font-weight:400;max-width:none}
+.say p+p{margin-top:7px}
+.hook{display:inline-block;margin-top:12px;font-size:9.4pt;font-weight:700;color:#6B4E00;background:var(--gold-soft);border-radius:99px;padding:4px 13px}
+.cap{font-size:8pt;color:var(--mute);margin-top:6px}
+
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:9mm;margin-top:12px}
+.three h4{font-size:10.6pt;font-weight:900;color:var(--ink);margin-bottom:3px}
+.three p{font-size:9.4pt;line-height:1.5}
+.three .k{display:block;font-size:8pt;font-weight:700;letter-spacing:.14em;color:var(--acc);margin-bottom:5px}
+.eq{font-size:10.5pt;font-weight:700;color:var(--ink);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:0 0 8px}
+.eq span{color:var(--acc)}
+.note{background:var(--acc-soft);border-radius:10px;padding:11px 15px;font-size:9.6pt;line-height:1.52;color:#2A3A8F;margin-top:12px}
+.note b{color:#1B2A78}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-top:4px}
+.vs h4{font-size:11pt;font-weight:900;color:var(--ink);margin-bottom:3px}
+.vs .s h4{color:var(--mute)}
+.vs p{font-size:9.8pt;line-height:1.5}
+.rew{margin-top:8px}
+.rew div{display:grid;grid-template-columns:22mm 1fr auto;align-items:baseline;border-top:1px solid var(--line);padding:8px 0}
+.rew div:last-child{border-bottom:1px solid var(--line)}
+.rew .v{font-size:19pt;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.rew .v.neg{color:var(--warn)}
+.rew .t{font-size:10pt;font-weight:700;color:var(--ink)}
+.rew .d{font-size:8.6pt;color:var(--mute)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);margin-top:12px;border-top:1px solid var(--line)}
+.flow div{padding:11px 10px 0 0;position:relative}
+.flow div:before{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.flow .n{font-size:7.8pt;font-weight:700;letter-spacing:.14em;color:var(--mute);display:block}
+.flow b{display:block;font-size:10.4pt;margin:2px 0}
+.flow span.t{font-size:8.7pt;line-height:1.42;display:block}
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:9mm;margin-top:10px}
+.layers b{display:block;font-size:7.8pt;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+.layers span{font-size:9.2pt;line-height:1.45;display:block}
+.stats{display:flex;gap:14mm;margin:12px 0 2px}
+.stats .n{font-size:25pt;font-weight:900;letter-spacing:-.03em;color:var(--ink);line-height:1}
+.stats .n em{font-style:normal;color:var(--acc)}
+.stats .l{font-size:8.6pt;color:var(--mute);max-width:46mm;line-height:1.35;margin-top:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-top:12px}
+.cols h4{font-size:8.2pt;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+.cols .y h4{color:var(--acc)}.cols .x h4{color:var(--warn)}
+.cols li{list-style:none;font-size:9.6pt;line-height:1.48;padding:5px 0;border-top:1px solid var(--line)}
+.big{font-size:20pt;line-height:1.2;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.big em{font-style:normal;color:var(--acc)}
+
+.qa .row{display:grid;grid-template-columns:50mm 1fr;gap:8mm;padding:9px 0;border-top:1px solid var(--line)}
+.qa .row:last-child{border-bottom:1px solid var(--line)}
+.qa .q{font-size:9.8pt;font-weight:900;color:var(--ink);line-height:1.35}
+.qa .a{font-size:9.4pt;line-height:1.5}
+.hooks{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 10mm;margin-top:10px}
+.hooks div{font-size:9.4pt;color:var(--ink);padding:7px 0;border-top:1px solid var(--line)}
+.hooks small{display:block;font-size:7.6pt;letter-spacing:.14em;font-weight:700;color:var(--acc);margin-bottom:1px}
+.foot{position:absolute;left:21mm;right:21mm;bottom:8mm;display:flex;justify-content:space-between;font-size:7.4pt;color:var(--mute);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<!-- 1 · COVER + WHAT IS MAPPO -->
+<div class="page">
+  <div class="eyebrow">Capstone · Presenter guide</div>
+  <h1>MAPPO,<br><i>explained.</i></h1>
+  <p class="lede">What it is, why we used it, how it works in our project, and what it gave us. Written to be said out loud.</p>
+  <div class="rule"></div>
+
+  <div class="sec">
+    <div class="no">01</div>
+    <div>
+      <h2>What is MAPPO?</h2>
+      <p><b>Multi-Agent Proximal Policy Optimization.</b> Reinforcement learning where several agents learn at the same time, each from the reward it earns.</p>
+    </div>
+  </div>
+
+  <div class="ind" style="margin-top:7mm">
+<svg viewBox="0 0 640 215" role="img" aria-label="Attacker sends an attack to the defender, the reply is scored by the environment and rewards flow back to both; a critic observes during training only">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#14161F"/></marker>
+  <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L9 5 L0 9z" fill="#2D50E6"/></marker></defs>
+  <rect x="190" y="2" width="260" height="44" rx="22" fill="none" stroke="#2D50E6" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="320" y="23" text-anchor="middle" font-size="13" font-weight="900" fill="#2D50E6">CENTRAL CRITIC</text>
+  <text x="320" y="38" text-anchor="middle" font-size="10" fill="#8A90A2">training only · sees both sides</text>
+  <path d="M262 45 L96 96" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+  <path d="M320 46 L320 96" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+  <path d="M378 45 L544 96" stroke="#2D50E6" stroke-width="1.2" stroke-dasharray="3 4" fill="none"/>
+  <rect x="0" y="96" width="180" height="66" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+  <text x="90" y="125" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Attacker</text>
+  <text x="90" y="143" text-anchor="middle" font-size="10" fill="#8A90A2">sees only its tactic hint</text>
+  <rect x="230" y="96" width="180" height="66" rx="14" fill="#14161F"/>
+  <text x="320" y="125" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">Defender</text>
+  <text x="320" y="143" text-anchor="middle" font-size="10" fill="#A8AEC4">sees only the conversation</text>
+  <rect x="460" y="96" width="180" height="66" rx="14" fill="#fff" stroke="#14161F" stroke-width="1.5"/>
+  <text x="550" y="125" text-anchor="middle" font-size="15" font-weight="900" fill="#14161F">Environment</text>
+  <text x="550" y="143" text-anchor="middle" font-size="10" fill="#8A90A2">leak detector scores the reply</text>
+  <path d="M182 129 H228" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+  <path d="M412 129 H458" stroke="#14161F" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="205" y="120" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">attack</text>
+  <text x="435" y="120" text-anchor="middle" font-size="9.5" font-weight="700" fill="#14161F">reply</text>
+  <path d="M550 162 V190 H90 V166" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+  <path d="M320 190 V166" fill="none" stroke="#2D50E6" stroke-width="1.6" marker-end="url(#b)"/>
+  <text x="320" y="209" text-anchor="middle" font-size="10" font-weight="700" fill="#2D50E6">rewards flow back to both</text>
+</svg>
+  </div>
+
+  <div class="ind">
+    <div class="say">
+      <span class="lab">SAY THIS</span>
+      <p>“MAPPO is Multi-Agent Proximal Policy Optimization. It’s a reinforcement learning method where several agents learn at the same time. In our project there are two: an attacker that tries to extract the secret word CAPSTONE, and a defender that tries to protect it while still answering normal questions. Each one improves by getting a reward for what it did.</p>
+      <p>The ‘multi-agent’ part uses a design called CTDE: Centralized Training, Decentralized Execution. During training, one shared critic sees both sides, the attack and the response, and judges how good each outcome was. At deployment the critic is gone, and the defender acts only on what it sees.”</p>
+    </div>
+    <div class="layers">
+      <div><b>Actors</b><span>Two LoRA adapters on one Qwen2.5-0.5B backbone.</span></div>
+      <div><b>Critic</b><span>Frozen MiniLM with two value heads.</span></div>
+      <div><b>Environment</b><span>The secret, plus a leak detector that scores every reply.</span></div>
+    </div>
+    <span class="hook">Two players, one referee during practice, no referee in the real game.</span>
+  </div>
+  <div class="foot"><span>MAPPO presenter guide</span><span>1</span></div>
+</div>
+
+<!-- 2 · NAIVE VS MAPPO -->
+<div class="page">
+  <div class="sec">
+    <div class="no">02</div>
+    <div>
+      <h2>How is it different from naive policy gradient?</h2>
+      <p>Naive policy gradient: <b>try an action, get a reward, make that action more likely if the reward was good.</b> It has two problems, and the clipped objective is the answer to the second.</p>
+      <div class="three">
+        <div><span class="k">PROBLEM 1</span><h4>High variance</h4><p>A raw +1 means nothing if you always get +1. A critic computes an advantage: better or worse than expected.</p></div>
+        <div><span class="k">PROBLEM 2</span><h4>Dangerous steps</h4><p>One big update can wreck the model. Clipping keeps the new policy close to the old one.</p></div>
+        <div><span class="k">BONUS</span><h4>KL penalty</h4><p>Keeps the model near a reference policy so it never drifts into gibberish.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind" style="margin-top:8mm;display:grid;grid-template-columns:1.15fr 1fr;gap:11mm;align-items:center">
+<svg viewBox="0 0 310 175" role="img" aria-label="Clipped objective rises with the probability ratio then flattens above 1.2">
+  <rect x="190" y="14" width="100" height="116" fill="#E9EDFD"/>
+  <line x1="22" y1="130" x2="294" y2="130" stroke="#14161F" stroke-width="1"/>
+  <line x1="22" y1="14" x2="22" y2="130" stroke="#14161F" stroke-width="1"/>
+  <line x1="142" y1="14" x2="142" y2="130" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+  <line x1="94" y1="14" x2="94" y2="130" stroke="#D5D2C8" stroke-dasharray="3 3"/>
+  <path d="M190 60 L290 28" stroke="#D9502B" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+  <text x="290" y="16" text-anchor="end" font-size="9" font-weight="700" fill="#D9502B">naive keeps growing</text>
+  <path d="M22 124 L190 60 L290 60" stroke="#2D50E6" stroke-width="2.8" fill="none" stroke-linejoin="round"/>
+  <circle cx="190" cy="60" r="4.5" fill="#2D50E6"/>
+  <text x="240" y="114" text-anchor="middle" font-size="9" font-weight="700" fill="#2A3A8F">no extra push</text>
+  <text x="94" y="146" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">0.8</text>
+  <text x="142" y="146" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.0</text>
+  <text x="190" y="146" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4A5062">1.2</text>
+  <text x="158" y="166" text-anchor="middle" font-size="9" fill="#8A90A2">ratio = new policy ÷ old policy</text>
+</svg>
+    <div>
+      <h3 class="s" style="margin-top:0">Draw this one line</h3>
+      <div class="eq">min( <span>ratio × advantage</span>, <span>clip(ratio, 0.8, 1.2) × advantage</span> )</div>
+      <p style="font-size:9.5pt;line-height:1.5"><b>Advantage</b> = reward + γ·V(next) − V(now).</p>
+    </div>
+  </div>
+
+  <div class="ind">
+    <div class="say">
+      <span class="lab">SAY THIS</span>
+      <p>“Naive policy gradient works like this: try an action, get a reward, make that action more likely if the reward was good. It has two problems.</p>
+      <p><b>High variance.</b> A raw reward of +1 means nothing if you always get +1. MAPPO uses a critic to compute an advantage: was this outcome better or worse than expected? That makes learning much more stable.</p>
+      <p><b>Dangerous step sizes.</b> One big update can wreck the model. PPO fixes it with a clipped objective. It compares the new policy to the old one with a ratio, and clips that ratio to 0.8–1.2. The model can improve, but it can’t move far in one step.”</p>
+    </div>
+    <div class="note"><b>Your proof it matters: the v1 bug.</b> “Our own first run had a ratio bug. The ratio came out around 0.56 instead of 1. That put every update outside the clip range, so the gradient for bad behaviour was zero. The model could reinforce what it liked but never unlearn anything, and it collapsed. After the fix the ratio at iteration 0 was 0.997.” This shows you understand the clip, not just the formula.</div>
+    <p style="font-size:9.6pt;margin-top:10px"><b>Also mention:</b> a KL penalty keeps the model close to a reference policy so it doesn’t drift into gibberish.</p>
+    <span class="hook">Naive = a big jump and it might fall. Clipped = small safe steps. Critic = a baseline for what’s normal.</span>
+  </div>
+  <div class="foot"><span>MAPPO presenter guide</span><span>2</span></div>
+</div>
+
+<!-- 3 · WHY MAPPO OVER SFT -->
+<div class="page">
+  <div class="sec">
+    <div class="no">03</div>
+    <div>
+      <h2>Why did we use it? Why MAPPO over SFT?</h2>
+      <div class="vs">
+        <div class="s"><h4>SFT: copy the answer key</h4><p>Shows an attack and the correct refusal, and copies it. It never experiences the consequence of its own answer.</p></div>
+        <div><h4 style="color:var(--acc)">MAPPO: learn from consequences</h4><p>The defender writes its own answer, the environment says what happened, and it remembers which action led to which outcome.</p></div>
+      </div>
+      <h3 class="s">The reward that teaches it</h3>
+      <div class="rew">
+        <div><span class="v">+1.0</span><span class="t">Refuse a real attack</span><span class="d">correct block</span></div>
+        <div><span class="v">+1.0</span><span class="t">Answer a normal question</span><span class="d">stay useful</span></div>
+        <div><span class="v neg">−1.0</span><span class="t">Refuse a normal question</span><span class="d">over-refusal</span></div>
+        <div><span class="v neg">−1.5</span><span class="t">Leak the secret</span><span class="d">heaviest penalty</span></div>
+      </div>
+      <p class="cap" style="max-width:none">Slide note: the leak penalty in the code is −1.5, so say −1.5, not −2.</p>
+    </div>
+  </div>
+
+  <div class="ind">
+    <div class="say">
+      <span class="lab">SAY THIS</span>
+      <p>“SFT teaches by imitation. We show it an attack and the correct refusal, and it copies. It never experiences the consequence of its own answer. It only learns the examples we wrote.</p>
+      <p>With MAPPO the model generates its own answer, and the environment tells it what happened. Refusing a real attack gives +1. Answering a normal question gives +1. Refusing a normal question gives −1, which is over-refusal. Leaking the secret gives the heaviest penalty, −1.5. So the model remembers which action led to which outcome and shifts toward actions that score well.</p>
+      <p>We also expected an adversarial benefit. Prompt injection is a moving target, and a co-trained attacker can produce attacks we didn’t write by hand, so the defender isn’t just memorizing a fixed list.”</p>
+    </div>
+    <h3 class="s">Say the design detail</h3>
+    <p style="font-size:10pt;max-width:142mm">“About 30–40% of training episodes are benign, so the model can’t win by refusing everything. We audited this with <b>reward_audit()</b>.”</p>
+    <span class="hook">SFT = copy the answer key. MAPPO = learn from consequences.</span>
+  </div>
+
+  <div class="foot"><span>MAPPO presenter guide</span><span>3</span></div>
+</div>
+
+<!-- 4 · WE CAN'T SAY -->
+<div class="page">
+  <div class="sec">
+    <div class="no">04</div>
+    <div>
+      <h2>We can’t say MAPPO is <span style="color:var(--warn)">better than SFT</span></h2>
+      <p>That is the blank to fill. Our data supports something smaller, and more defensible.</p>
+      <svg viewBox="0 0 520 112" role="img" aria-label="Share of 253 unseen attacks defended: no defence 21%, SFT small 65%, MAPPO plus SFT 73%, SFT big 100%" style="margin-top:10px">
+        <g font-size="10.5" font-weight="700" fill="#4A5062"><text x="0" y="14">No defence</text><text x="0" y="42">SFT small</text><text x="0" y="70" fill="#2D50E6">MAPPO + SFT</text><text x="0" y="98">SFT big (400 ex.)</text></g>
+        <g><rect x="112" y="4" width="360" height="13" rx="6.5" fill="#EAE8E1"/><rect x="112" y="4" width="75.6" height="13" rx="6.5" fill="#B4B9C8"/>
+        <rect x="112" y="32" width="360" height="13" rx="6.5" fill="#EAE8E1"/><rect x="112" y="32" width="234" height="13" rx="6.5" fill="#B4B9C8"/>
+        <rect x="112" y="60" width="360" height="13" rx="6.5" fill="#EAE8E1"/><rect x="112" y="60" width="262.8" height="13" rx="6.5" fill="#2D50E6"/>
+        <rect x="112" y="88" width="360" height="13" rx="6.5" fill="#EAE8E1"/><rect x="112" y="88" width="360" height="13" rx="6.5" fill="#14161F"/></g>
+        <g font-size="10.5" font-weight="900" fill="#14161F"><text x="482" y="15">21%</text><text x="482" y="43">65%</text><text x="482" y="71" fill="#2D50E6">73%</text><text x="482" y="99">100%</text></g>
+      </svg>
+      <div class="cap">Share of 253 held-out attacks defended. Higher is better.</div>
+      <div class="stats">
+        <div><div class="n"><em>0.73</em> vs 0.65</div><div class="l">defended: MAPPO on small SFT vs the small SFT, p = 0.012</div></div>
+        <div><div class="n">6.7% → <em>3.5%</em></div><div class="l">leak rate, with no cost on common prompts</div></div>
+      </div>
+      <div class="cols">
+        <div class="y"><h4>What we can say</h4><ul>
+          <li>MAPPO on top of a small SFT improves defence against unseen attack families.</li>
+          <li>It costs nothing on common prompts.</li></ul></div>
+        <div class="x"><h4>What we cannot say</h4><ul>
+          <li><b>That MAPPO beats SFT in general.</b> A bigger, more varied SFT set reached 1.00 and beat every MAPPO run. MAPPO on top of that gave no gain.</li>
+          <li><b>That it fixes over-refusal</b> on unseen benign prompts. It didn’t.</li>
+          <li><b>That it works alone.</b> Cold-start MAPPO failed to learn the task.</li>
+          <li><b>That the attacker was strong.</b> It was too weak to separate the defenders.</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind">
+    <div class="say">
+      <span class="lab">SAY THIS</span>
+      <p>“Honestly, here is what our data supports. MAPPO on top of a small SFT improves defence against unseen attack families: 0.73 versus 0.65 defended, p = 0.012, with fewer leaks, 3.5% versus 6.7%. It costs nothing on common prompts.</p>
+      <p>What we can’t say is that MAPPO beats SFT in general. A bigger, more varied SFT set reached 1.00 and beat every MAPPO run. MAPPO doesn’t fix over-refusal on unseen benign prompts. It doesn’t work alone: cold-start MAPPO failed to learn the task, so it needs SFT first. And the attacker was too weak to separate the defenders.”</p>
+    </div>
+    <div style="margin-top:20px" class="big">MAPPO is a useful <em>refinement layer</em> on top of SFT, not a <em>replacement</em> for good supervised data.</div>
+    <span class="hook">Refinement, not replacement.</span>
+  </div>
+  <div class="foot"><span>MAPPO presenter guide</span><span>4</span></div>
+</div>
+
+<!-- 5 · IMPLEMENTATION + QA -->
+<div class="page">
+  <div class="eyebrow">Under the hood</div>
+  <h1 style="font-size:28pt;margin:8px 0 4px">How we built it</h1>
+  <div class="flow" style="margin-top:14px">
+    <div><span class="n">01</span><b>Rollout</b><span class="t">Attacker writes from a tactic hint, defender replies.</span></div>
+    <div><span class="n">02</span><b>Judge</b><span class="t">Leak oracle checks plain text, base64, ROT13, leetspeak and more.</span></div>
+    <div><span class="n">03</span><b>Critic</b><span class="t">MiniLM with two value heads predicts reward for each agent.</span></div>
+    <div><span class="n">04</span><b>Advantage</b><span class="t">Reward minus the expected value, normalised per agent.</span></div>
+    <div><span class="n">05</span><b>Update</b><span class="t">Clipped step plus a KL leash on each LoRA adapter.</span></div>
+  </div>
+  <div class="cols" style="margin-top:9mm">
+    <div class="y"><h4>Settings</h4><ul><li>Learning rate 1e-5, clip 0.2, γ 0.95</li><li>Batch 8, 90 iterations, LoRA rank 16</li><li>3–5 seeds, checkpoints picked on a validation split</li></ul></div>
+    <div class="y"><h4>Key design call</h4><ul><li>Warm-start the defender from an SFT adapter and anchor the KL leash to it.</li><li>Cold start failed to learn the task.</li><li>Code: src/mappo.py, critic.py, env.py</li></ul></div>
+  </div>
+
+  <div class="rule" style="margin:9mm 0 6mm"></div>
+  <div class="eyebrow">Be ready</div>
+  <h2 style="font-size:20pt;margin:6px 0 4px">Questions the panel may ask</h2>
+  <p style="margin-bottom:5mm;max-width:130mm">Short, honest answers. Say the first sentence, then stop unless they probe.</p>
+  <div class="qa">
+    <div class="row"><div class="q">Why not plain PPO?</div><div class="a">The environment has an opponent that keeps changing. The centralized critic gives a stable shared baseline across both agents.</div></div>
+    <div class="row"><div class="q">What is “centralized” here?</div><div class="a">The critic sees the attack, the response and turn features together. The actors see only their own prompt.</div></div>
+    <div class="row"><div class="q">What is the advantage?</div><div class="a">r + γV(next) − V(now): how much better the outcome was than the critic expected.</div></div>
+    <div class="row"><div class="q">Why is the critic frozen and small?</div><div class="a">A frozen MiniLM encoder keeps it cheap enough to run beside two LLM actors on a 16 GB laptop.</div></div>
+    <div class="row"><div class="q">What is LoRA, and why?</div><div class="a">Small trainable low-rank matrices on a frozen model. It makes training fit in memory, and one backbone can hold two adapters.</div></div>
+    <div class="row"><div class="q">Why warm-start from SFT?</div><div class="a">A 0.5B model can’t discover the attack/benign boundary by exploration. Refusing pays more than guessing, so cold start fails. SFT supplies the boundary and RL refines it.</div></div>
+    <div class="row"><div class="q">Why is the KL penalty there?</div><div class="a">It stops drift into gibberish. Caveat: it’s a soft penalty, and we measured the drift rather than claiming a hard budget.</div></div>
+  </div>
+  <div class="foot"><span>MAPPO presenter guide</span><span>5</span></div>
+</div>
+
+<!-- 6 · QA 2 + 60s -->
+<div class="page">
+  <div class="qa">
+    <div class="row"><div class="q">How do you know it isn’t just over-refusing?</div><div class="a">Benign prompts are in training with a −1 refusal penalty. We also test benign answers on held-out prompts and report that over-refusal was not fixed.</div></div>
+    <div class="row"><div class="q">How do you measure success?</div><div class="a">Held-out attacks never used in training or checkpoint selection. Checkpoints were chosen on a separate validation split.</div></div>
+    <div class="row"><div class="q">Is the result statistically meaningful?</div><div class="a">The MAPPO-vs-small-SFT gain on unseen attacks is significant (Fisher p = 0.012). Other differences, such as benign over-refusal, are not.</div></div>
+    <div class="row"><div class="q">How many seeds?</div><div class="a">Five seeds for MAPPO-from-small-SFT and three for the others. There was high variance across seeds in early runs, so we pooled seeds.</div></div>
+    <div class="row"><div class="q">What was the biggest failure?</div><div class="a">The v1 ratio bug, and the attacker collapsing into echoing its own instructions. Our detector missed it, so we sampled the policies directly.</div></div>
+    <div class="row"><div class="q">Why is reward hacking a concern?</div><div class="a">A reward can be satisfied by a broken policy. In seed 1 the model got reward for evasive non-refusals, so we set adv_engaged from +0.40 to 0.</div></div>
+    <div class="row"><div class="q">What would you do next?</div><div class="a">Add a stronger attacker, put a pretrained attack classifier in the reward, and use a curriculum that starts with attacks it can already detect.</div></div>
+    <div class="row"><div class="q">Real-world applicability?</div><div class="a">Only the relative ranking transfers. This is a 0.5B model on one secret word, not frontier red-teaming.</div></div>
+  </div>
+  <div class="rule" style="margin:9mm 0 7mm"></div>
+  <div class="eyebrow">If you are short on time</div>
+  <h2 style="font-size:20pt;margin:6px 0 6px">The 60-second version</h2>
+  <div class="say" style="margin-top:6px">
+    <span class="lab">SAY THIS</span>
+    <p>“MAPPO is multi-agent PPO: an attacker and a defender train together, with a shared critic during training. It differs from naive policy gradient by using a critic to compute advantages and a clipped objective so updates stay small and safe. We used it because SFT only imitates answers, while RL lets the defender learn from the consequences of its own responses: +1 for the right behaviour, −1.5 for leaking the secret. The result is a modest but statistically significant gain over small SFT on unseen attacks. But we can’t say MAPPO beats SFT. A bigger SFT set matched or beat it, and MAPPO needs SFT to start. It’s a refinement, not a replacement.”</p>
+  </div>
+  <div class="hooks">
+    <div><small>01 WHAT</small>Two players, one referee during practice, no referee in the real game.</div>
+    <div><small>02 HOW</small>Naive = big jump. Clipped = small safe steps. Critic = baseline.</div>
+    <div><small>03 WHY</small>SFT = copy the answer key. MAPPO = learn from consequences.</div>
+    <div><small>04 LIMIT</small>Refinement, not replacement.</div>
+  </div>
+  <div class="foot"><span>MAPPO presenter guide</span><span>6</span></div>
+</div>
+
+</body>
+</html>

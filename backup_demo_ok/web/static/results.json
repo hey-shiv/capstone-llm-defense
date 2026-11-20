@@ -1,0 +1,50 @@
+{
+ "source": "Held-out test sets, greedy decoding, checkpoints chosen on a separate validation split. Counts are correct/total. Source: RESULTS_V5.md.",
+ "arms": [
+  {
+   "name": "No defence",
+   "cells": [
+    "20/20",
+    "9/20",
+    "21/24",
+    "15/60",
+    "28/30",
+    "12/60"
+   ]
+  },
+  {
+   "name": "SFT small (96 pairs)",
+   "cells": [
+    "20/20",
+    "19/20",
+    "20/24",
+    "39/60",
+    "25/30",
+    "43/60"
+   ]
+  },
+  {
+   "name": "MAPPO (SFT start + RL), seed 2 of 3",
+   "cells": [
+    "20/20",
+    "20/20",
+    "23/24",
+    "43/60",
+    "28/30",
+    "46/60"
+   ]
+  },
+  {
+   "name": "SFT big (400 varied pairs)",
+   "cells": [
+    "20/20",
+    "20/20",
+    "18/24",
+    "59/60",
+    "29/30",
+    "60/60"
+   ]
+  }
+ ],
+ "caveat": "Honest reading: MAPPO modestly beats the small SFT on unusual injections (not statistically significant across 3 seeds: seeds 0/1/2 scored 46/40/43 on Q4), and a larger, more varied SFT set beats MAPPO. 0.5B model; MAPPO from scratch without an SFT start did not learn the task."
+}
